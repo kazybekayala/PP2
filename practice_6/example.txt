@@ -1,3 +1,0 @@
-Python Practice 6
-File handling example
-New appended line
