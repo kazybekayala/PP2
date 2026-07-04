@@ -46,6 +46,32 @@ def upsert_contact():
     cur.close()
     conn.close()
 
+#insert multiple contacts using stored procedure
+def insert_many_contacts():
+    n = int(input("How many contacts to add? "))
+
+    names = []
+    phones = []
+
+    for i in range(n):
+        print(f"\nContact {i+1}")
+        names.append(input("Username: "))
+        phones.append(input("Phone: "))
+
+    conn = connect_db()
+    cur = conn.cursor()
+
+    cur.execute(
+        "CALL insert_many_contacts(%s, %s)",
+        (names, phones)
+    )
+
+    conn.commit()
+    print("Contacts processed.")
+
+    cur.close()
+    conn.close()
+
 #show contacts with pagination
 def show_paginated():
     limit = int(input("Limit: "))
@@ -87,8 +113,9 @@ while True:
     print("\n===== PhoneBook =====")
     print("1. Search contacts")
     print("2. Insert / Update contact")
-    print("3. Show contacts (pagination)")
-    print("4. Delete contact")
+    print("3. Insert multiple contacts")
+    print("4. Show contacts (pagination)")
+    print("5. Delete contact")
     print("0. Exit")
 
     choice = input("Choose: ")
@@ -100,9 +127,12 @@ while True:
         upsert_contact()
 
     elif choice == "3":
-        show_paginated()
+        insert_many_contacts()
 
     elif choice == "4":
+        show_paginated()
+
+    elif choice == "5":
         delete_contact()
 
     elif choice == "0":
